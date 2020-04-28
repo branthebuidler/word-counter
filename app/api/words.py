@@ -1,6 +1,8 @@
 from flask import abort, request, current_app
 from flask_restx import Namespace, Resource, fields
-import requests, validators, re
+import requests
+import validators
+import re
 
 api = Namespace('words', 'Words related operations')
 
@@ -32,7 +34,8 @@ class WordStats(Resource):
     @api.marshal_with(word_model, code=200, description='Word count retrieved')
     def get(self, word):
         if word is None:
-            abort(400, custom='Key is None')
+            app
+            abort(400)
         stats = query(word)
         return Word(word, stats)
 
@@ -50,10 +53,14 @@ class WordCounter(Resource):
 
         elif content['type'] == 'file':
             persistence = current_app.extensions['persistence'].open()
-            with open(content['data']) as fh:
-                for line in fh:
-                    process_string(line, persistence)
-            current_app.extensions['persistence'].write(persistence)
+            try:
+                with open(content['data']) as fh:
+                    for line in fh:
+                        process_string(line, persistence)
+            except FileNotFoundError:
+                abort(400)
+            finally:
+                current_app.extensions['persistence'].write(persistence)
 
         elif content['type'] == 'url':
             persistence = current_app.extensions['persistence'].open()
@@ -64,17 +71,17 @@ class WordCounter(Resource):
             current_app.extensions['persistence'].write(persistence)
 
         else:
-            abort(400, custom='Malformed request')
+            abort(400)
 
 
 def make_request(url):
     if not validators.url(url):
-        abort(400, custom='Invalid url')
+        abort(400)
     try:
         response = requests.get(url, stream=True)
         return response.iter_lines()
-    except Exception as e:
-        abort(500, f'Internal error: {e}')
+    except Exception:
+        abort(500)
 
 
 def process_string(data, persistence):

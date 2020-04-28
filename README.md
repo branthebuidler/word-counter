@@ -17,6 +17,24 @@ Docs provided by Swagger. After running, navigate to:
  
 http://127.0.0.1:5000/
 
+API examples:
+Process simple string text:
+```
+curl -X POST "http://127.0.0.1:5000/api/words/counter" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"type\": \"string\", \"data\": \"string\"}"
+```
+Process simple string text:
+```
+curl -X POST "http://127.0.0.1:5000/api/words/counter" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"type\": \"string\", \"data\": \"string\"}"
+```
+Process file text:
+```
+curl -X POST "http://127.0.0.1:5000/api/words/counter" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"type\": \"file\", \"data\": \"/tmp/file\"}"
+```
+Process endpoint text:
+```
+curl -X POST "http://127.0.0.1:5000/api/words/counter" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"type\": \"url\", \"data\": \"http://www.google.com\"}"
+```
+
 ## Running the tests
 
 E2E tests can be run using pytest. Run:
