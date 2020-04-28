@@ -12,6 +12,8 @@ Run dev server:
 python manager.py run
 ```
 
+Persistence defaults to /tmp/persistence_file, but this can be customized in config.py. 
+
 ## Docs
 Docs provided by Swagger. After running, navigate to:
  
