@@ -20,9 +20,10 @@ Docs provided by Swagger. After running, navigate to:
 http://127.0.0.1:5000/
 
 API examples:
-Process simple string text:
+
+Lookup frequency:
 ```
-curl -X POST "http://127.0.0.1:5000/api/words/counter" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"type\": \"string\", \"data\": \"string\"}"
+curl -X GET "http://127.0.0.1:5000/api/words/stats/string" -H "accept: application/json"
 ```
 Process simple string text:
 ```
