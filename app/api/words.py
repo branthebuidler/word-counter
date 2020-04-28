@@ -34,7 +34,6 @@ class WordStats(Resource):
     @api.marshal_with(word_model, code=200, description='Word count retrieved')
     def get(self, word):
         if word is None:
-            app
             abort(400)
         stats = query(word)
         return Word(word, stats)
