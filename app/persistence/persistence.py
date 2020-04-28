@@ -4,6 +4,7 @@ from msgpack import Packer, Unpacker
 class Persistence:
 
     class _MessagePack(object):
+
         def __init__(self, app):
             self.app = app
             self.app.teardown_request(self.close)
@@ -11,20 +12,21 @@ class Persistence:
                 open(self.app.config['PERSISTENCE_FILE'])
             except FileNotFoundError:
                 self.write({})
+            self.in_mem = self._open_persistence()
 
         def open(self):
-            handler = self._open_persistence()
-            for d in handler:
-                return d
+            return self.in_mem
 
         def _open_persistence(self):
             cfg = self.app.config
             unpacker = Unpacker(open(cfg['PERSISTENCE_FILE'], 'rb'))
-            return unpacker
+            for d in unpacker:
+                return d
 
         def write(self, dictionary):
             cfg = self.app.config
             packer = Packer()
+            self.in_mem = dictionary
             with open(cfg['PERSISTENCE_FILE'], 'wb') as fh:
                 fh.write(packer.pack(dictionary))
 
