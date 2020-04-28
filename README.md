@@ -3,7 +3,6 @@
 Simple persistent word frequency service built using Flask. Exposes an API which provides frequency lookup and can process text delivered from a remote endpoint, file (stored on local machine) or as argument.
 
 ## Installing
-
 Install dependencies:
 ```
 pip install -r requirements.txt
@@ -14,13 +13,13 @@ python manager.py run
 ```
 
 ## Docs
-Docs provided by swagger. Simply navigate to:
+Docs provided by Swagger. After running, navigate to:
  
-http://127.0.0.1:5000/explorer
+http://127.0.0.1:5000/
 
 ## Running the tests
 
-E2E tests can be run using pytest. Simply run:
+E2E tests can be run using pytest. Run:
 ```
 py.test
 ```
