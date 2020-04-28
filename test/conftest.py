@@ -1,6 +1,6 @@
 import pytest
 import tempfile
-from app.persistence.persistence import Persistence
+from app.db.db import WordData
 
 from app import create_app
 
@@ -15,8 +15,8 @@ def client():
     }
 
     app = create_app(test_config)
-    persistence = Persistence()
-    persistence.init_app(app)
+    db = WordData()
+    db.init_app(app)
 
     testing_client = app.test_client()
 

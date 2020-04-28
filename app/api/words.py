@@ -46,28 +46,28 @@ class WordCounter(Resource):
     def post(self):
         content = request.get_json()
         if content['type'] == 'string':
-            persistence = current_app.extensions['persistence'].open()
-            process_string(content['data'], persistence)
-            current_app.extensions['persistence'].write(persistence)
+            word_data = current_app.extensions['db'].open()
+            process_string(content['data'], word_data)
+            current_app.extensions['db'].persist(word_data)
 
         elif content['type'] == 'file':
-            persistence = current_app.extensions['persistence'].open()
+            word_data = current_app.extensions['db'].open()
             try:
                 with open(content['data']) as fh:
                     for line in fh:
-                        process_string(line, persistence)
+                        process_string(line, word_data)
             except FileNotFoundError:
                 abort(400)
             finally:
-                current_app.extensions['persistence'].write(persistence)
+                current_app.extensions['db'].persist(word_data)
 
         elif content['type'] == 'url':
-            persistence = current_app.extensions['persistence'].open()
+            word_data = current_app.extensions['db'].open()
             for line in make_request(content['data']):
                 if line:
                     decoded_line = line.decode('utf-8')
-                    process_string(decoded_line, persistence)
-            current_app.extensions['persistence'].write(persistence)
+                    process_string(decoded_line, word_data)
+            current_app.extensions['db'].persist(word_data)
 
         else:
             abort(400)
@@ -83,18 +83,18 @@ def make_request(url):
         abort(500)
 
 
-def process_string(data, persistence):
-    for word in clean_text(data).split():
+def process_string(words, word_data):
+    for word in clean_text(words).split():
         try:
-            persistence[word] += 1
+            word_data[word] += 1
         except KeyError:
-            persistence[word] = 1
+            word_data[word] = 1
 
 
 def query(key):
-    persistence = current_app.extensions['persistence'].open()
-    if clean_text(key) in persistence:
-        return persistence[key]
+    word_data = current_app.extensions['db'].open()
+    if clean_text(key) in word_data:
+        return word_data[key]
     return 0
 
 

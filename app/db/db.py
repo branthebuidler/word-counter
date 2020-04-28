@@ -1,17 +1,16 @@
 from msgpack import Packer, Unpacker
 
 
-class Persistence:
+class WordData:
 
     class _MessagePack(object):
 
         def __init__(self, app):
             self.app = app
-            self.app.teardown_request(self.close)
             try:
                 open(self.app.config['PERSISTENCE_FILE'])
             except FileNotFoundError:
-                self.write({})
+                self.persist({})
             self.in_mem = self._open_persistence()
 
         def open(self):
@@ -23,20 +22,16 @@ class Persistence:
             for d in unpacker:
                 return d
 
-        def write(self, dictionary):
+        def persist(self, dictionary):
             cfg = self.app.config
             packer = Packer()
-            self.in_mem = dictionary
             with open(cfg['PERSISTENCE_FILE'], 'wb') as fh:
                 fh.write(packer.pack(dictionary))
-
-        def close(self, ignore_arg):
-            pass
 
     def init_app(self, app):
         if 'PERSISTENCE_FILE' not in app.config:
             raise RuntimeError("PERSISTENCE_FILE is required in configuration.")
-        app.extensions['persistence'] = self._MessagePack(app)
+        app.extensions['db'] = self._MessagePack(app)
 
 
 

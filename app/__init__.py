@@ -1,9 +1,9 @@
 import os
 from flask import Flask
 from .api import api
-from .persistence.persistence import Persistence
+from .db.db import WordData
 
-persistence = Persistence()
+db = WordData()
 
 
 def create_app(test_config=None):
@@ -21,6 +21,6 @@ def create_app(test_config=None):
 
     with app.app_context():
         api.init_app(app)
-        persistence.init_app(app)
+        db.init_app(app)
 
         return app
